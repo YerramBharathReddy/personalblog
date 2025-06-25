@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bharath Reddy Yerram - Web Designer & Developer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter for general text -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #0a0d13; /* Even darker background for more techy feel */
+            color: #e2e8f0; /* Light text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+            position: relative; /* Needed for pseudo-elements */
+            z-index: 1; /* Base layer */
+        }
+
+        /* Global background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top left, rgba(20, 83, 45, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at bottom right, rgba(23, 37, 84, 0.1) 0%, transparent 40%),
+                        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232b2e3a' fill-opacity='0.4' fill-rule='evenodd'%3E%3Ccircle cx='30' cy='30' r='12' /%3E%3Cpath d='M60 0v60H0V0h60ZM30 18a12 12 0 1 1 0 24 12 12 0 0 1 0-24Z' /%3E%3C/g%3E%3C/svg%3E");
+            background-size: cover, cover, 30px 30px;
+            z-index: -1; /* Behind content */
+            pointer-events: none; /* Allow clicks through */
+            animation: backgroundSubtlePulse 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes backgroundSubtlePulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.95; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a202c;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
+        }
+
+        /* Keyframe animations for sections and elements */
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-bg-animation {
+            animation: gradientShift 15s ease infinite alternate;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, #34d399, #10b981); /* Brighter green gradient */
+            border-radius: 9999px; /* Full rounded corners */
+            transition: width 1.5s ease-out; /* Slower, smoother animation */
+        }
+
+        /* Custom styles for section reveal on scroll (JavaScript controlled) */
+        .section-hidden {
+            opacity: 0;
+            transform: translateY(80px) scale(0.95);
+            filter: blur(5px);
+            transition: opacity 1s ease-out, transform 1s ease-out, filter 1s ease-out;
+        }
+
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        /* Glow effect for buttons and important elements */
+        .btn-glow {
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.5), 0 0 30px rgba(52, 211, 153, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-glow:hover {
+            box-shadow: 0 0 20px rgba(52, 211, 153, 0.7), 0 0 40px rgba(52, 211, 153, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Project card hover effect */
+        .project-card {
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out;
+            background-color: #151a24; /* Darker card background */
+            border: 1px solid #2d3748;
+        }
+        .project-card:hover {
+            transform: translateY(-10px) rotateZ(1deg); /* Slight rotation on hover */
+            box-shadow: 0 25px 35px -8px rgba(0, 0, 0, 0.6), 0 15px 15px -8px rgba(0, 0, 0, 0.4);
+            border-color: #34d399; /* Accent border on hover */
+        }
+
+        /* Typing Effect */
+        .typing-text span {
+            display: inline-block;
+            opacity: 0;
+            animation: fadeInText 0.1s forwards;
+        }
+
+        @keyframes fadeInText {
+            to { opacity: 1; }
+        }
+
+        /* Particle background for hero section */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 5;
+            pointer-events: none; /* Allow interaction with elements behind */
+            overflow: hidden; /* Ensure particles don't spill */
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(52, 211, 153, 0.6); /* Greenish translucent particles */
+            border-radius: 50%;
+            opacity: 0;
+            animation: particle-fade-move 10s infinite ease-out;
+        }
+
+        @keyframes particle-fade-move {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-100vh) scale(1.2); }
+        }
+
+        /* Header nav active indicator */
+        .nav-indicator {
+            position: absolute;
+            bottom: -5px;
+            height: 3px;
+            background-color: #34d399; /* Green accent */
+            transition: all 0.3s ease-out;
+            border-radius: 2px;
+            z-index: 10; /* Ensure it's above other elements */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full bg-gray-950 bg-opacity-80 backdrop-blur-md shadow-lg z-50 p-4 border-b border-gray-800">
+        <nav class="container mx-auto flex justify-between items-center px-4 relative">
+            <div class="text-3xl font-extrabold text-green-400">Bharath Reddy Yerram</div>
+            <ul class="flex space-x-8" id="main-nav">
+                <li><a href="#home" class="nav-link text-lg font-medium text-gray-300 hover:text-green-400 transition duration-300 relative group">Home</a></li>
+                <li><a href="#about" class="nav-link text-lg font-medium text-gray-300 hover:text-green-400 transition duration-300 relative group">About</a></li>
+                <li><a href="#portfolio" class="nav-link text-lg font-medium text-gray-300 hover:text-green-400 transition duration-300 relative group">Portfolio</a></li>
+                <li><a href="#services" class="nav-link text-lg font-medium text-gray-300 hover:text-green-400 transition duration-300 relative group">Services</a></li>
+                <li><a href="#contact" class="nav-link text-lg font-medium text-gray-300 hover:text-green-400 transition duration-300 relative group">Contact</a></li>
+            </ul>
+            <div class="nav-indicator" id="nav-indicator"></div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area (padding-top to clear fixed header) -->
+    <main class="pt-20">
+
+        <!-- Home/Hero Section -->
+        <section id="home" class="relative h-screen flex items-center justify-center text-center p-6 bg-gradient-to-br from-gray-950 via-indigo-950 to-purple-950 hero-bg-animation overflow-hidden">
+            <div id="particles-js"></div> <!-- Particle container -->
+            <div class="relative z-10 max-w-4xl mx-auto space-y-6 fade-in-up">
+                <h1 class="text-6xl md:text-7xl font-extrabold text-white leading-tight drop-shadow-xl">
+                    Crafting <span class="text-green-400">Digital Experiences</span> That Inspire
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-200 leading-relaxed font-light typing-text" id="hero-subheadline">
+                    </p>
+                <div class="flex justify-center space-x-6 pt-6">
+                    <a href="#portfolio" class="bg-green-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 transition-all duration-300 btn-glow">
+                        View Portfolio <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="#contact" class="border-2 border-green-500 text-green-500 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-500 hover:text-white transition-all duration-300 btn-glow">
+                        Get in Touch <i class="fas fa-envelope ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 bg-gray-900 border-t border-b border-gray-800 section-hidden p-6">
+            <div class="container mx-auto px-4">
+                <h2 class="text-5xl font-bold text-center text-green-400 mb-16">About Me</h2>
+                <div class="grid md:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-8">
+                        <p class="text-lg leading-relaxed text-gray-300">
+                            I am a passionate and results-driven Web Designer and Frontend Developer with over 2 years of experience creating intuitive, visually stunning, and highly functional digital experiences. My journey in web development has been driven by a fascination with blending aesthetics with cutting-edge technology.
+                        </p>
+                        <p class="text-lg leading-relaxed text-gray-300">
+                            My expertise lies in translating complex ideas into elegant, user-centric designs and then bringing those designs to life with clean, efficient code. I thrive in collaborative environments, working closely with UX/UI designers and backend teams to deliver high-quality, responsive web applications that exceed client expectations.
+                        </p>
+                        <p class="text-lg leading-relaxed text-gray-300">
+                            I am adept at problem-solving and continuously seek to learn and implement new technologies to enhance user engagement and performance. My goal is to build digital products that are not just beautiful, but also highly effective and accessible.
+                        </p>
+                    </div>
+                    <div class="space-y-8">
+                        <h3 class="text-3xl font-semibold text-green-400 mb-6">Technical Arsenal</h3>
+                        <div class="space-y-4">
+                            <!-- Skill Bar -->
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-lg font-medium text-gray-200">UI/UX Design</span>
+                                    <span class="text-md font-bold text-green-400">90%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                                    <div class="skill-bar-fill" data-skill-level="90"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-lg font-medium text-gray-200">Frontend Development (React, Angular)</span>
+                                    <span class="text-md font-bold text-green-400">95%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                                    <div class="skill-bar-fill" data-skill-level="95"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-lg font-medium text-gray-200">HTML & CSS (Tailwind, Bootstrap)</span>
+                                    <span class="text-md font-bold text-green-400">98%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                                    <div class="skill-bar-fill" data-skill-level="98"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-lg font-medium text-gray-200">JavaScript (ES6+)</span>
+                                    <span class="text-md font-bold text-green-400">92%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                                    <div class="skill-bar-fill" data-skill-level="92"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-lg font-medium text-gray-200">Responsive Design</span>
+                                    <span class="text-md font-bold text-green-400">97%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                                    <div class="skill-bar-fill" data-skill-level="97"></div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-lg font-medium text-gray-200">Tools (Figma, Git, Jira)</span>
+                                    <span class="text-md font-bold text-green-400">88%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                                    <div class="skill-bar-fill" data-skill-level="88"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="py-24 bg-gradient-to-br from-gray-800 to-gray-900 section-hidden p-6">
+            <div class="container mx-auto px-4">
+                <h2 class="text-5xl font-bold text-center text-green-400 mb-16">My Portfolio</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    <!-- Project Card 1 -->
+                    <div class="project-card rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+                        <img src="https://placehold.co/600x400/1e293b/a7f3d0?text=Project+1+Image" alt="Hindu Marriage Registration Project" class="w-full h-64 object-cover">
+                        <div class="p-8">
+                            <h3 class="text-3xl font-bold text-green-400 mb-3">Hindu Marriage Registration</h3>
+                            <p class="text-gray-400 mb-4">A government web application for digitizing marriage registration processes.</p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">Next.js</span>
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">Redux</span>
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">MongoDB</span>
+                            </div>
+                            <a href="#" class="inline-block bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition duration-300 btn-glow">
+                                View Case Study <i class="fas fa-external-link-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 2 -->
+                    <div class="project-card rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+                        <img src="https://placehold.co/600x400/1e293b/a7f3d0?text=Project+2+Image" alt="CARD PRIMME Project" class="w-full h-64 object-cover">
+                        <div class="p-8">
+                            <h3 class="text-3xl font-bold text-green-400 mb-3">CARD PRIMME</h3>
+                            <p class="text-gray-400 mb-4">Land Registration Web Application for Sub-Registrar Offices in Andhra Pradesh.</p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">Next.js</span>
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">Redux</span>
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">Biometric Auth</span>
+                            </div>
+                            <a href="#" class="inline-block bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition duration-300 btn-glow">
+                                View Case Study <i class="fas fa-external-link-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 3 -->
+                    <div class="project-card rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+                        <img src="https://placehold.co/600x400/1e293b/a7f3d0?text=Project+3+Image" alt="Paper Publication Assistance Project" class="w-full h-64 object-cover">
+                        <div class="p-8">
+                            <h3 class="text-3xl font-bold text-green-400 mb-3">Research Scholars Platform</h3>
+                            <p class="text-gray-400 mb-4">Platform to assist research scholars with paper publication and feedback.</p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">JavaScript</span>
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">Web Tools</span>
+                                <span class="bg-gray-700 text-gray-300 text-sm px-3 py-1 rounded-full">Feedback System</span>
+                            </div>
+                            <a href="#" class="inline-block bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition duration-300 btn-glow">
+                                View Case Study <i class="fas fa-external-link-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-24 bg-gray-900 border-t border-b border-gray-800 section-hidden p-6">
+            <div class="container mx-auto px-4">
+                <h2 class="text-5xl font-bold text-center text-green-400 mb-16">My Services & Expertise</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+                    <!-- Service Card 1 -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-700 text-center transform hover:scale-105 transition duration-300">
+                        <i class="fas fa-palette text-5xl text-green-400 mb-6"></i>
+                        <h3 class="text-2xl font-semibold text-white mb-3">UI/UX Design</h3>
+                        <p class="text-gray-400 leading-relaxed">Crafting intuitive and engaging user interfaces for seamless experiences.</p>
+                    </div>
+
+                    <!-- Service Card 2 -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-700 text-center transform hover:scale-105 transition duration-300">
+                        <i class="fas fa-code text-5xl text-green-400 mb-6"></i>
+                        <h3 class="text-2xl font-semibold text-white mb-3">Frontend Development</h3>
+                        <p class="text-gray-400 leading-relaxed">Building robust, responsive, and performant web applications with modern frameworks.</p>
+                    </div>
+
+                    <!-- Service Card 3 -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-700 text-center transform hover:scale-105 transition duration-300">
+                        <i class="fas fa-mobile-alt text-5xl text-green-400 mb-6"></i>
+                        <h3 class="text-2xl font-semibold text-white mb-3">Responsive Design</h3>
+                        <p class="text-gray-400 leading-relaxed">Ensuring your digital presence looks perfect on any device, big or small.</p>
+                    </div>
+
+                    <!-- Service Card 4 -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-700 text-center transform hover:scale-105 transition duration-300">
+                        <i class="fas fa-lightbulb text-5xl text-green-400 mb-6"></i>
+                        <h3 class="text-2xl font-semibold text-white mb-3">Consulting & Strategy</h3>
+                        <p class="text-gray-400 leading-relaxed">Guiding you through design and development processes for optimal outcomes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Certifications & Education Section -->
+        <section id="certifications" class="py-24 bg-gradient-to-br from-gray-800 to-gray-900 section-hidden p-6">
+            <div class="container mx-auto px-4">
+                <h2 class="text-5xl font-bold text-center text-green-400 mb-16">Certifications & Education</h2>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Certifications -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-700 transform hover:scale-105 transition duration-300">
+                        <h3 class="text-3xl font-semibold text-white mb-6"><i class="fas fa-award text-green-400 mr-3"></i>Certifications</h3>
+                        <ul class="list-disc list-inside text-gray-300 space-y-3 text-lg">
+                            <li>Certified JavaScript Developer, W3Schools</li>
+                            <li>React Certification, Codecademy</li>
+                        </ul>
+                    </div>
+                    <!-- Education -->
+                    <div class="bg-gray-800 p-8 rounded-xl shadow-xl border border-gray-700 transform hover:scale-105 transition duration-300">
+                        <h3 class="text-3xl font-semibold text-white mb-6"><i class="fas fa-graduation-cap text-green-400 mr-3"></i>Education</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="text-xl font-medium text-green-400">Bachelor of Technology in Computer Science</h4>
+                                <p class="text-gray-300">Christu Jyothi Institute of Technology and Science</p>
+                                <p class="text-gray-400 text-md">Graduated: May 2019</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 bg-gray-900 border-t border-b border-gray-800 section-hidden p-6">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-5xl font-bold text-green-400 mb-16">Let's Connect!</h2>
+                <div class="bg-gray-800 p-10 rounded-xl shadow-xl max-w-2xl mx-auto border border-gray-700">
+                    <p class="text-lg text-gray-300 mb-8">I'm always excited to discuss new projects, collaborations, or just chat about design and development. Feel free to reach out!</p>
+                    <form class="space-y-6">
+                        <div>
+                            <input type="text" id="name" name="name" placeholder="Your Name" class="w-full p-4 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-green-500 focus:border-green-500 transition duration-300 placeholder-gray-400" required>
+                        </div>
+                        <div>
+                            <input type="email" id="email" name="email" placeholder="Your Email" class="w-full p-4 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-green-500 focus:border-green-500 transition duration-300 placeholder-gray-400" required>
+                        </div>
+                        <div>
+                            <textarea id="message" name="message" rows="6" placeholder="Your Message" class="w-full p-4 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-green-500 focus:border-green-500 transition duration-300 placeholder-gray-400" required></textarea>
+                        </div>
+                        <button type="submit" class="bg-green-500 text-white px-8 py-4 rounded-full text-xl font-semibold hover:bg-green-600 transition-all duration-300 btn-glow">
+                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                    <div class="mt-10 pt-6 border-t border-gray-700 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 text-gray-300">
+                        <p class="text-xl font-semibold"><i class="fas fa-phone-alt text-green-400 mr-2"></i> +91 9949504898</p>
+                        <p class="text-xl font-semibold"><i class="fas fa-envelope text-green-400 mr-2"></i> bharathreddybeta@gmail.com</p>
+                        <p class="text-xl font-semibold"><i class="fas fa-map-marker-alt text-green-400 mr-2"></i> Venkatapur, Warangal.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 text-gray-400 py-8 text-center border-t border-gray-800">
+        <div class="container mx-auto px-4">
+            <p>&copy; <span id="current-year"></span> Bharath Reddy Yerram. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="mailto:bharathreddybeta@gmail.com" class="text-gray-400 hover:text-green-400 transition-colors duration-300" aria-label="Email"><i class="fas fa-envelope text-2xl"></i></a>
+                <!-- Placeholder for GitHub, LinkedIn - replace # with actual URLs -->
+                <a href="#" class="text-gray-400 hover:text-green-400 transition-colors duration-300" aria-label="GitHub"><i class="fab fa-github text-2xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-green-400 transition-colors duration-300" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-2xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links and active indicator
+        document.querySelectorAll('header nav ul li a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Function to update the navigation indicator
+        function updateNavIndicator(activeNavLink) {
+            const indicator = document.getElementById('nav-indicator');
+            if (activeNavLink) {
+                indicator.style.width = `${activeNavLink.offsetWidth}px`;
+                indicator.style.left = `${activeNavLink.offsetLeft}px`;
+                indicator.style.opacity = '1';
+            } else {
+                indicator.style.opacity = '0';
+            }
+        }
+
+        // Intersection Observer for scroll-in animations and header highlight
+        const sections = document.querySelectorAll('main section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const observerOptions = {
+            root: null,
+            rootMargin: '-50% 0px -49% 0px', /* Adjusted to make section active when it's roughly in the middle of the viewport */
+            threshold: 0 /* No threshold needed if using rootMargin this way */
+        };
+
+        const sectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                const targetId = `#${entry.target.id}`;
+                const correspondingNavLink = document.querySelector(`header nav ul li a[href="${targetId}"]`);
+
+                if (entry.isIntersecting) {
+                    // Animate section into view
+                    entry.target.classList.remove('section-hidden');
+                    entry.target.classList.add('section-visible');
+
+                    // Update active nav link
+                    navLinks.forEach(link => link.classList.remove('text-green-400'));
+                    if (correspondingNavLink) {
+                        correspondingNavLink.classList.add('text-green-400');
+                        updateNavIndicator(correspondingNavLink);
+                    }
+                } else {
+                    // If a section scrolls out, it should revert to hidden (for up-scrolling)
+                    // This ensures the animation plays again if scrolled back into view
+                    // However, we only unobserve if it's visible, so this might not be needed for all
+                    // For a more robust solution, you'd re-add 'section-hidden' on exiting intersection.
+                    // For now, only focus on the visible state.
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            section.classList.add('section-hidden'); // Add initial hidden state
+            sectionObserver.observe(section);
+        });
+
+        // Handle initial load active state for 'home' section
+        const initialHomeSection = document.getElementById('home');
+        if (initialHomeSection) {
+            const homeNavLink = document.querySelector('header nav ul li a[href="#home"]');
+            if (homeNavLink) {
+                homeNavLink.classList.add('text-green-400');
+                updateNavIndicator(homeNavLink);
+            }
+        }
+
+        // Typing Effect for Hero Subheadline
+        const heroSubheadline = document.getElementById('hero-subheadline');
+        const messages = [
+            "Passionate Web Designer | UI/UX Enthusiast | Frontend Developer with an eye for pixel-perfect design and seamless user interactions."
+        ];
+        let messageIndex = 0;
+        let charIndex = 0;
+        let typingDelay = 50; // milliseconds
+        let erasingDelay = 25; // milliseconds (not used in this version, but good to have)
+        let newMsgDelay = 2000; // milliseconds before starting next message
+
+        function typeEffect() {
+            if (charIndex < messages[messageIndex].length) {
+                heroSubheadline.innerHTML += `<span style="animation-delay: ${charIndex * typingDelay}ms">${messages[messageIndex].charAt(charIndex)}</span>`;
+                charIndex++;
+                setTimeout(typeEffect, typingDelay);
+            }
+        }
+        // Start typing effect after the initial fade-in of the hero content
+        window.addEventListener('load', () => {
+            const heroContent = document.querySelector('#home .fade-in-up');
+            heroContent.addEventListener('animationend', () => {
+                typeEffect();
+            }, { once: true }); // Ensure this only runs once
+        });
+
+        // Particle Background Generation
+        const particlesContainer = document.getElementById('particles-js');
+        const numParticles = 80;
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 4 + 2; // Size between 2px and 6px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`; // Start anywhere on screen
+            particle.style.animationDelay = `${Math.random() * 10}s`; // Stagger animation start
+            particlesContainer.appendChild(particle);
+
+            // Remove particle after its animation ends to prevent accumulation
+            particle.addEventListener('animationend', () => {
+                particle.remove();
+                // Recreate particle to maintain continuous effect
+                createParticle();
+            });
+        }
+
+        for (let i = 0; i < numParticles; i++) {
+            createParticle();
+        }
+
+        // Animate Skill Bars on Section Visible
+        const skillBars = document.querySelectorAll('.skill-bar-fill');
+        const skillObserverOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5 // When 50% of the skill bar is visible
+        };
+
+        const skillObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const skillLevel = entry.target.dataset.skillLevel;
+                    entry.target.style.width = `${skillLevel}%`;
+                    observer.unobserve(entry.target); // Stop observing once animated
+                }
+            });
+        }, skillObserverOptions);
+
+        skillBars.forEach(bar => {
+            bar.style.width = '0%'; // Initialize width to 0
+            skillObserver.observe(bar);
+        });
+
+        // Dynamic current year for the footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Optional: Form submission handler (client-side only for this example)
+        document.querySelector('#contact form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            console.log('Form submitted!');
+            console.log('Name:', document.getElementById('name').value);
+            console.log('Email:', document.getElementById('email').value);
+            console.log('Message:', document.getElementById('message').value);
+
+            // Simple success message (replace with a custom modal in a full app)
+            alert('Thank you for your message! I will get back to you shortly.');
+
+            // Clear form fields
+            event.target.reset();
+        });
+    </script>
+</body>
+</html>
